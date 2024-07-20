@@ -1,5 +1,6 @@
 import { Notify } from "quasar";
 import axios from "axios";
+import { computed } from "vue";
 
 // export const resetFormFields = (formFields) => {
 //   for (const key in formFields) {
@@ -8,6 +9,9 @@ import axios from "axios";
 //     // }
 //   }
 // };
+export const passwordIcon = computed((inputType) => {
+  return inputType.value === "password" ? "visibility_off" : "visibility";
+});
 export const resetFormFields = (obj) => {
   for (let key in obj) {
     if (typeof obj[key] === "object") {
@@ -18,16 +22,20 @@ export const resetFormFields = (obj) => {
   }
 };
 export const hasEmptyField = (formFields) => {
+  var test = true;
   for (let key in formFields) {
     if (typeof formFields[key] === "object") {
       hasEmptyField(formFields[key]);
     } else {
       if (formFields[key] === "") {
-        return true;
+        test = true;
+        break;
+      } else {
+        test = false;
       }
-      return false;
     }
   }
+  return test;
 };
 
 export function notificationFonction(message, type, color, position, icon) {
@@ -43,9 +51,9 @@ export function notificationFonction(message, type, color, position, icon) {
     actions: [{ icon: "close", color: "white" }],
   });
 }
-// export function passwordVisibility(inputType) {
-//   inputType.value = inputType.value === "password" ? "text" : "password";
-// }
+export function passwordVisibility(inputType) {
+  inputType.value = inputType.value === "password" ? "text" : "password";
+}
 
 export const insertQuery = async (url, data) => {
   const config = {

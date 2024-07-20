@@ -5,8 +5,8 @@
     </div>
 
     <div v-else class="backPicture">
-      <q-card
-        class="row bg-white"
+      <div
+        class="row bg-white customer-card"
         :class="{ 'cardLoginPosition shadow-6 body': $q.screen.gt.sm }"
       >
         <div
@@ -37,17 +37,17 @@
               {{ $t("authTitle") }}
             </div>
             <q-separator color="primary" class="gt-sm separator" inset />
-            <div
-              style="border-radius: 0px 0px 50px 50px"
-              class="bg-primary lt-md q-pt-lg"
-            >
+            <div class="bg-primary header-div lt-md q-pt-lg">
               <div class="text-subtitle2 text-secondary">
+                <br />
+                <br />
                 <q-avatar color="white">
                   <img :src="logoRenova" width="100px" alt="imd" srcset="" />
                 </q-avatar>
               </div>
               <br />
-              <div class="text-h6 text-bold">
+              <br />
+              <div class="text-h6 text-bold text-white">
                 {{ $t("authTitle") }}
               </div>
               <q-separator color="secondary " class="separatorLessThan" inset />
@@ -90,11 +90,7 @@
                     </template>
                     <template v-slot:append>
                       <q-icon
-                        :name="
-                          inputType === 'password'
-                            ? 'visibility_off'
-                            : 'visibility'
-                        "
+                        :name="passIcon"
                         class="cursor-pointer"
                         @click="togglePasswordVisibility"
                       />
@@ -155,7 +151,7 @@
             </div>
           </div>
         </div>
-      </q-card>
+      </div>
     </div>
   </div>
 </template>
@@ -176,6 +172,8 @@ import {
   notificationFonction,
   insertQuery,
   LoadingLife,
+  passwordVisibility,
+  passwordIcon,
 } from "../../app/utils/index";
 
 const { t } = useI18n();
@@ -194,13 +192,15 @@ const connectedWith = ref([
 ]);
 const store = authStore();
 
-// function
-function togglePasswordVisibility(inputType) {
-  inputType.value = inputType.value === "password" ? "text" : "password";
+function togglePasswordVisibility() {
+  passwordVisibility(inputType);
 }
 
+const passIcon = computed(() => {
+  return inputType.value === "password" ? "visibility_off" : "visibility";
+});
+
 onMounted(async () => {
-  // await LoadingLife(loadingspinner.value, 2000);
   await setTimeout(() => {
     loadingspinner.value = false;
   }, 2000);
@@ -211,8 +211,8 @@ const onSubmit = async () => {
     notificationFonction(
       "Data are empty",
       "negative",
-      "negative",
-      "bottom",
+      "warning",
+      "top",
       "error"
     );
     return;
@@ -229,7 +229,7 @@ const onSubmit = async () => {
             res.data.errors[0].message,
             "negative",
             "negative",
-            "bottom-right",
+            "top-right",
             "error"
           );
         } else {
