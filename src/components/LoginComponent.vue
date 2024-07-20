@@ -1,195 +1,192 @@
 <template>
-  <div class="backPicture">
-    <q-card
-      class="shadow-6 row bg-white q-mx-xl q-my-xl"
-      :class="{ ' body': $q.screen.gt.sm, bodySmall: $q.screen.lt.md }"
-    >
-      <div
-        class="gt-sm col-xl-5 col-lg-5 col-md-5 col-sm-5 col-xs-12 login-left bg-primary"
+  <div class="bg-primary">
+    <div v-if="loadingspinner" class="text-center">
+      <BeforeFetch />
+    </div>
+
+    <div v-else class="backPicture">
+      <q-card
+        class="row bg-white"
+        :class="{ 'cardLoginPosition shadow-6 body': $q.screen.gt.sm }"
       >
-        <div class="text-center q-my-xl">
-          <div class="text-subtitle2">Hello</div>
-          <div class="text-h6">Welcome</div>
-        </div>
-        <div class="text-center q-my-xl">
-          <q-avatar color="white">
-            <img :src="logoRenova" width="100px" alt="imd" srcset="" />
-          </q-avatar>
-        </div>
-        <div class="text-center q-mx-md q-mb-xs">
-          <p>
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Itaque
-            numquam, harum illum commodi aliquam nostrum distinctio dolorem.
-            Culpa perferendis impedit vel nobis, suscipit sequi alias incidunt
-            voluptates blanditiis, nisi accusamus.
-          </p>
-          <br /><br />
-          <p class="text-secondary q-mb-xl text-bold">Making Business better</p>
-        </div>
-      </div>
-      <div class="col-xl-7 col-lg-7 col-md-7 col-sm-12 col-xs-12 bg-white">
-        <div class="text-center">
-          <div class="text-h6 q-mt-lg gt-sm text-bold">SIGN - IN</div>
-          <q-separator
-            color="primary"
-            class="gt-sm"
-            style="
-              height: 3px;
-              width: 20%;
-              margin-left: auto;
-              margin-right: auto;
-            "
-            inset
-          />
-          <div
-            style="border-radius: 0px 0px 50px 50px"
-            class="bg-primary lt-md q-pt-md"
-          >
-            <div class="text-subtitle2 text-secondary">
-              <q-avatar color="white">
-                <img :src="logoRenova" width="100px" alt="imd" srcset="" />
-              </q-avatar>
-            </div>
-            <br />
-            <div class="text-h6 text-bold">SIGN - IN</div>
-            <q-separator
-              color="secondary"
-              style="
-                height: 3px;
-                width: 25%;
-                margin-left: auto;
-                margin-right: auto;
-              "
-              inset
-            />
-            <br />
+        <div
+          class="gt-sm col-xl-5 col-lg-5 col-md-5 col-sm-5 col-xs-12 bg-primary"
+        >
+          <div class="text-center q-my-xl">
+            <div class="text-subtitle2">{{ $t("hello") }}</div>
+            <div class="text-h6">{{ $t("welcome") }}</div>
           </div>
-
-          <br />
-
-          <div :class="{ 'bg-white inputBlock': $q.screen.gt.sm }">
-            <br />
-            <div class="q-px-xl">
-              <q-form @submit.prevent="onSubmit">
-                <q-input
-                  rounded
-                  outlined
-                  dense
-                  v-model="LoginInput.phone"
-                  label="The phone number"
-                >
-                  <template v-slot:prepend>
-                    <q-icon name="create" />
-                  </template>
-                </q-input>
-                <br />
-                <q-input
-                  rounded
-                  outlined
-                  bottom-slots
-                  v-model="LoginInput.password"
-                  label="The Password"
-                  dense
-                  :type="inputType"
-                >
-                  <!-- :rules="[(val) => !!val || '* Required']" -->
-                  <template v-slot:prepend>
-                    <q-icon name="key" />
-                  </template>
-                  <template v-slot:append>
-                    <q-icon
-                      :name="
-                        inputType === 'password'
-                          ? 'visibility_off'
-                          : 'visibility'
-                      "
-                      class="cursor-pointer"
-                      @click="togglePasswordVisibility"
-                    />
-                  </template>
-                </q-input>
-                <p class="float-right">
-                  Forgot password? click
-                  <span>
-                    <router-link
-                      to="Forgot-Password"
-                      style="text-decoration: none"
-                      class="text-secondary text-bold"
-                    >
-                      here
-                    </router-link>
-                  </span>
-                </p>
-                <br /><br />
-                <div
-                  class="flex flex-center"
-                  style="marign-left: auto; margin-right: auto"
-                >
-                  <q-btn
-                    unelevated
-                    tooltip="Sign up"
-                    type="submit"
-                    rounded
-                    color="primary"
-                    class="text-center"
-                    style="width: 150px"
-                    icon="cloud_download"
-                    label="   continue"
-                    :loading="loading"
-                  />
-                </div>
-              </q-form>
-              <br />
-              OR
-              <br /><br />
-              <div class="text-center q-gutter-md">
-                <q-avatar
-                  size="md"
-                  v-for="(data, index) in connectedWith"
-                  :key="index"
-                >
-                  <img :src="data.url" alt="img" srcset="" />
+          <div class="text-center q-my-xl">
+            <q-avatar color="white">
+              <img :src="logoRenova" width="100px" alt="imd" srcset="" />
+            </q-avatar>
+          </div>
+          <div class="text-center q-mx-md q-mb-xs">
+            <p class="">
+              {{ $t("authDecsription") }}
+            </p>
+            <br /><br />
+            <p class="text-secondary q-mb-xl text-bold">
+              {{ $t("aboutRenovaa") }}
+            </p>
+          </div>
+        </div>
+        <div class="col-xl-7 col-lg-7 col-md-7 col-sm-12 col-xs-12 bg-white">
+          <div class="text-center">
+            <div class="text-h6 q-mt-lg gt-sm text-bold">
+              {{ $t("authTitle") }}
+            </div>
+            <q-separator color="primary" class="gt-sm separator" inset />
+            <div
+              style="border-radius: 0px 0px 50px 50px"
+              class="bg-primary lt-md q-pt-lg"
+            >
+              <div class="text-subtitle2 text-secondary">
+                <q-avatar color="white">
+                  <img :src="logoRenova" width="100px" alt="imd" srcset="" />
                 </q-avatar>
               </div>
               <br />
-              Haven't an account?
-              <span>
-                <router-link
-                  to="SIgnUp"
-                  style="text-decoration: none"
-                  class="text-secondary text-bold"
-                >
-                  Sign Up
-                </router-link>
-              </span>
+              <div class="text-h6 text-bold">
+                {{ $t("authTitle") }}
+              </div>
+              <q-separator color="secondary " class="separatorLessThan" inset />
               <br />
+            </div>
+
+            <br />
+
+            <div :class="{ 'bg-white inputBlock': $q.screen.gt.sm }">
+              <br />
+              <div
+                class="q-px-xl"
+                :class="{ 'q-mb-xl q-pb-md': $q.screen.lt.md }"
+              >
+                <q-form @submit.prevent="onSubmit">
+                  <q-input
+                    rounded
+                    outlined
+                    dense
+                    v-model="LoginInput.phone"
+                    :label="$t('phoneInput')"
+                  >
+                    <template v-slot:prepend>
+                      <q-icon name="create" />
+                    </template>
+                  </q-input>
+                  <br />
+                  <q-input
+                    rounded
+                    outlined
+                    bottom-slots
+                    v-model="LoginInput.password"
+                    :label="$t('pwdInput')"
+                    dense
+                    :type="inputType"
+                  >
+                    <!-- :rules="[(val) => !!val || '* Required']" -->
+                    <template v-slot:prepend>
+                      <q-icon name="key" />
+                    </template>
+                    <template v-slot:append>
+                      <q-icon
+                        :name="
+                          inputType === 'password'
+                            ? 'visibility_off'
+                            : 'visibility'
+                        "
+                        class="cursor-pointer"
+                        @click="togglePasswordVisibility"
+                      />
+                    </template>
+                  </q-input>
+                  <p class="float-right">
+                    {{ $t("authForgotPassword") }}
+                    <span>
+                      <router-link
+                        to="Forgot-Password"
+                        style="text-decoration: none"
+                        class="text-secondary text-bold"
+                      >
+                        {{ $t("ForgotPasswordLinkLabel") }}
+                      </router-link>
+                    </span>
+                  </p>
+                  <br /><br />
+                  <div class="flex flex-center centerDiv">
+                    <q-btn
+                      unelevated
+                      :tooltip="$t('loginBtn')"
+                      type="submit"
+                      rounded
+                      color="primary"
+                      class="text-center"
+                      style="width: 200px"
+                      icon="cloud_download"
+                      :label="$t('loginBtn')"
+                      :loading="loading"
+                    />
+                  </div>
+                </q-form>
+                <br />
+                {{ $t("or") }}
+                <br /><br />
+                <div class="text-center q-gutter-md">
+                  <q-avatar
+                    size="md"
+                    v-for="(data, index) in connectedWith"
+                    :key="index"
+                  >
+                    <img :src="data.url" alt="img" srcset="" />
+                  </q-avatar>
+                </div>
+                <br />
+                {{ $t("authRegister") }}
+                <span>
+                  <router-link
+                    to="SIgnUp"
+                    style="text-decoration: none"
+                    class="text-secondary text-bold"
+                  >
+                    {{ $t("signUpLinkLabel") }}
+                  </router-link>
+                </span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </q-card>
+      </q-card>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import AuthInfoComponent from "./shared/LeftAuthComponent.vue";
+import BeforeFetch from "./HomeLoadingComponent.vue";
 import { logo, logoRenova, api } from "../../app/variables.js";
 import axios from "axios";
 import { LoginQuery } from "../../app/query/LoginQuery";
 import { authStore } from "../stores/auth-store.js";
+import { useI18n } from "vue-i18n";
+
 import {
   resetFormFields,
   hasEmptyField,
   notificationFonction,
+  insertQuery,
+  LoadingLife,
 } from "../../app/utils/index";
 
+const { t } = useI18n();
 const inputType = ref("password");
 const LoginInput = ref({
   phone: "",
   password: "",
 });
+
 const loading = ref(false);
+const loadingspinner = ref(true);
 const connectedWith = ref([
   { name: "fb", url: "./img/fb.png" },
   { name: "x", url: "./img/twitter.jpg" },
@@ -201,6 +198,13 @@ const store = authStore();
 function togglePasswordVisibility(inputType) {
   inputType.value = inputType.value === "password" ? "text" : "password";
 }
+
+onMounted(async () => {
+  // await LoadingLife(loadingspinner.value, 2000);
+  await setTimeout(() => {
+    loadingspinner.value = false;
+  }, 2000);
+});
 
 const onSubmit = async () => {
   if (hasEmptyField(LoginInput.value)) {
@@ -218,11 +222,9 @@ const onSubmit = async () => {
       LoginInput.value.phone,
       LoginInput.value.password
     );
-    await axios
-      .post(`${api}/graphql`, { query })
+    await insertQuery(`${api}/graphql`, { query })
       .then(async (res) => {
         if (res.data.errors.length > 0) {
-          //   console.log(res.data.errors[0].message);
           await notificationFonction(
             res.data.errors[0].message,
             "negative",
@@ -230,7 +232,6 @@ const onSubmit = async () => {
             "bottom-right",
             "error"
           );
-          await resetFormFields(LoginInput.value);
         } else {
           await store.login(res, res.token);
 
@@ -241,6 +242,7 @@ const onSubmit = async () => {
             "bottom-right",
             "check"
           );
+          await resetFormFields(LoginInput.value);
         }
       })
       .catch((err) => {
@@ -253,21 +255,4 @@ const onSubmit = async () => {
 };
 </script>
 
-<style scoped>
-.body {
-  max-width: 65%;
-  margin-left: auto;
-  margin-right: auto;
-  border-radius: 20px;
-}
-.bodySmall {
-  max-width: 80%;
-  margin-left: auto;
-  margin-right: auto;
-  border-radius: 20px;
-}
-.inputBlock {
-  margin-left: -13px;
-  border-radius: 20px;
-}
-</style>
+<style scoped></style>

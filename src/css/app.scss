@@ -1,3 +1,78 @@
 // app global css in SCSS form
-$body-font-family: "Poppins", sans-serif !default;
-@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+// @import url("./src/css/app.variables.scss");
+.body {
+  max-width: 65%;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 20px;
+}
+.bodySmall {
+  max-width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 20px;
+}
+.inputBlock {
+  margin-left: -13px;
+  border-radius: 20px;
+}
+.backPicture {
+  background-color: blue;
+}
+.loading-container {
+  position: relative;
+  margin-left: 40%;
+  margin-right: auto;
+  margin-top: 20%;
+  margin-bottom: auto;
+  width: 7%;
+  height: 7%;
+}
+.loading-containerPhone {
+  position: relative;
+  margin-left: 40%;
+  margin-right: auto;
+  margin-top: 10%;
+  margin-bottom: auto;
+  width: 7%;
+  height: 7%;
+}
+
+$my-custom-color: rgb(58, 54, 66);
+.my-test {
+  background-color: $my-custom-color;
+}
+
+// Login style
+.cardLoginPosition {
+  position: fixed;
+  top: 80px;
+  left: 0;
+  right: 0;
+  bottom: 80px;
+  margin: auto;
+}
+.cardLoginPositionless {
+  position: fixed;
+  top: 80px;
+  left: 0;
+  right: 0;
+  bottom: 80px;
+  margin: auto;
+}
+.separator {
+  height: 3px;
+  width: 20%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.separatorLessThan {
+  height: 3px;
+  width: 25%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.centerDiv {
+  margin-left: auto;
+  margin-right: auto;
+}
