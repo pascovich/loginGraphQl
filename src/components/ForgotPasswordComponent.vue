@@ -13,7 +13,7 @@
         <div class="col-xl-7 col-lg-7 col-md-7 col-sm-12 col-xs-12 bg-white">
           <div class="text-center">
             <div class="text-h6 q-mt-lg gt-sm text-bold">
-              {{ $t("authTitle") }}
+              {{ $t("title") }}
             </div>
             <q-separator color="primary" class="gt-sm separator" inset />
             <div class="bg-primary header-div lt-md q-pt-lg">
@@ -27,7 +27,7 @@
               <br />
               <br />
               <div class="text-h6 text-bold text-white">
-                {{ $t("authTitle") }}
+                {{ $t("title") }}
               </div>
               <q-separator color="secondary " class="separatorLessThan" inset />
               <br />
@@ -54,36 +54,15 @@
                     </template>
                   </q-input>
                   <br />
-                  <q-input
-                    rounded
-                    outlined
-                    bottom-slots
-                    v-model="LoginInput.password"
-                    :label="$t('pwdInput')"
-                    dense
-                    :type="inputType"
-                  >
-                    <!-- :rules="[(val) => !!val || '* Required']" -->
-                    <template v-slot:prepend>
-                      <q-icon name="key" />
-                    </template>
-                    <template v-slot:append>
-                      <q-icon
-                        :name="passIcon"
-                        class="cursor-pointer"
-                        @click="togglePasswordVisibility"
-                      />
-                    </template>
-                  </q-input>
                   <p class="float-right">
-                    {{ $t("authForgotPassword") }}
+                    {{ $t("rememberPwd") }}
                     <span>
                       <router-link
-                        to="/forgot-password"
+                        to="login"
                         style="text-decoration: none"
                         class="text-secondary text-bold"
                       >
-                        {{ $t("ForgotPasswordLinkLabel") }}
+                        {{ $t("signInLinkLabel") }}
                       </router-link>
                     </span>
                   </p>

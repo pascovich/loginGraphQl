@@ -19,4 +19,9 @@ export default {
   or: "OR",
   phoneInput: "The phone number",
   pwdInput: "The password",
+
+  // Forgot Password
+  title: "Forgot Password",
+  rememberPwd: "Remember Password? click",
+  signInLinkLabel: "Sign In",
 };
