@@ -1,10 +1,6 @@
 <template>
   <div class="bg-primary">
-    <div v-if="loadingspinner" class="text-center">
-      <BeforeFetch />
-    </div>
-
-    <div v-else class="backPicture">
+    <div class="backPicture">
       <div
         class="row bg-white customer-card"
         :class="{ 'cardLoginPosition shadow-6 body': $q.screen.gt.sm }"
@@ -159,7 +155,7 @@
 <script setup>
 import { computed, onMounted, ref } from "vue";
 import AuthInfoComponent from "./shared/LeftAuthComponent.vue";
-import BeforeFetch from "./HomeLoadingComponent.vue";
+
 import { logo, logoRenova, api } from "../../app/variables.js";
 import axios from "axios";
 import { LoginQuery } from "../../app/query/LoginQuery";
@@ -184,7 +180,6 @@ const LoginInput = ref({
 });
 
 const loading = ref(false);
-const loadingspinner = ref(true);
 const connectedWith = ref([
   { name: "fb", url: "./img/fb.png" },
   { name: "x", url: "./img/twitter.jpg" },
@@ -198,12 +193,6 @@ function togglePasswordVisibility() {
 
 const passIcon = computed(() => {
   return inputType.value === "password" ? "visibility_off" : "visibility";
-});
-
-onMounted(async () => {
-  await setTimeout(() => {
-    loadingspinner.value = false;
-  }, 2000);
 });
 
 const onSubmit = async () => {

@@ -5,7 +5,7 @@
         class="fullscreen pending text-white text-center q-pa-md flex flex-center"
       >
         <div>
-          <q-img :src="logo" width="160px" alt="image" />
+          <img :src="logo" width="160px" alt="image" />
 
           <br />
           <q-spinner-dots class="" color="white" size="3em" />
