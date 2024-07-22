@@ -19,7 +19,10 @@
             <q-separator color="primary" class="gt-sm separator" inset />
             <br />
             <div class="text-subtitle2 gt-sm">
-              {{ $t("subtitleDescverifyCode") }}
+              {{ $t("subtitleDescverifyCode") }} :
+              <span class="text-primary text-bold">{{
+                store.getPhoneForgotPwd
+              }}</span>
             </div>
             <div class="bg-primary header-div lt-md q-pt-lg">
               <div class="text-subtitle2 text-secondary">
@@ -32,15 +35,16 @@
               <br />
               <br />
               <div class="text-h6 text-bold text-white">
-                {{ $t("titleVerifyCode") }} vvv
+                {{ $t("titleVerifyCode") }}
               </div>
               <q-separator color="secondary " class="separatorLessThan" inset />
               <br />
               <div class="text-subtitle2 text-white lt-md">
                 {{ $t("subtitleDescverifyCode") }}
+                <span class="text-primary text-bold">{{
+                  store.getPhoneForgotPwd
+                }}</span>
               </div>
-              {{ store.getPhoneForgotPwd }}
-              {{ ifSendCode }}cccc
             </div>
 
             <br />
@@ -66,8 +70,12 @@
                     <input type="text" v-model="nbr.num6" maxlength="1" />
                   </div>
                   <br />
-                  <p class="float-right">
+                  <div class="float-right" id="time" v-if="!timeOut">
+                    {{ counter }}
+                  </div>
+                  <p class="float-right" v-else>
                     {{ $t("haventsms") }}
+
                     <span
                       @click="resendCode"
                       class="text-secondary text-bold btn"
@@ -75,16 +83,30 @@
                       {{ $t("resendLinkLabel") }}
                     </span>
                   </p>
+
                   <br /><br />
-                  <div class="flex flex-center centerDiv">
+                  <div
+                    class="flex flex-center justify-espace-between centerDiv"
+                  >
+                    <q-btn
+                      unelevated
+                      @click="exitToForgot"
+                      :tooltip="$t('dismissBtn')"
+                      rounded
+                      color="red"
+                      class="text-white"
+                      style="width: 180px"
+                      icon="logout"
+                      :label="$t('dismissBtn')"
+                    />
                     <q-btn
                       unelevated
                       :tooltip="$t('loginBtn')"
                       type="submit"
                       rounded
                       color="primary"
-                      class="text-center"
-                      style="width: 200px"
+                      class="text-center q-ml-sm"
+                      style="width: 180px"
                       icon="cloud_download"
                       :label="$t('loginBtn')"
                       :loading="loading"
@@ -101,13 +123,17 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import AuthInfoComponent from "./shared/LeftAuthComponent.vue";
 import { authStore } from "../stores/auth-store.js";
 import { logo, logoRenova, api } from "../../app/variables.js";
 import axios from "axios";
-import { ForgotPasswordVerifyCodeQuery } from "../../app/query/LoginQuery";
+import {
+  ForgotPasswordVerifyCodeQuery,
+  ForgotPasswordQuery,
+} from "../../app/query/LoginQuery";
 import { useI18n } from "vue-i18n";
+import { useRouter } from "vue-router";
 
 import {
   resetFormFields,
@@ -117,6 +143,7 @@ import {
 } from "../../app/utils/index";
 
 const { t } = useI18n();
+const router = useRouter();
 const PhoneAndToken = ref({
   phone: "",
   verificationToken: "",
@@ -130,15 +157,36 @@ const nbr = ref({
   num6: "",
 });
 
+const counter = ref("");
 const store = authStore();
-const ifSendCode = computed(() => {
-  return store.getCheckSend;
-});
 
 const loading = ref(false);
+const timeOut = ref(false);
+const startCountdown = (timeleft) => {
+  var downloadTimer = setInterval(function () {
+    timeleft--;
+    counter.value = timeleft + ` ${t("counterTimeRest")}`;
+    if (timeleft <= 0) {
+      clearInterval(downloadTimer);
+      timeOut.value = true;
+    }
+  }, 1000);
+};
+
+onMounted(() => {
+  startCountdown(60);
+});
 
 const onSubmit = async () => {
-  PhoneAndToken.value.phone = num1.concat(num2, num3, num4, num5, num6);
+  loading.value = true;
+  PhoneAndToken.value.verificationToken = nbr.value.num1.concat(
+    nbr.value.num2,
+    nbr.value.num3,
+    nbr.value.num4,
+    nbr.value.num5,
+    nbr.value.num6
+  );
+  PhoneAndToken.value.phone = store.getPhoneForgotPwd;
   if (hasEmptyField(PhoneAndToken.value)) {
     notificationFonction(
       "Data are empty",
@@ -174,6 +222,8 @@ const onSubmit = async () => {
             "bottom-right",
             "check"
           );
+          store.setCheckSend();
+          router.push("/login");
         }
       })
       .catch((err) => {
@@ -182,6 +232,56 @@ const onSubmit = async () => {
       .finally(() => {
         loading.value = false;
       });
+  }
+};
+const exitToForgot = async () => {
+  startCountdown(0);
+  store.setCheckSend();
+};
+
+const resendCode = async () => {
+  // const query = await ForgotPasswordQuery(store.getPhoneForgotPwd);
+  await notificationFonction(
+    "res.data.message,",
+    "positive",
+    "primary",
+    "bottom-right",
+    "check"
+  );
+
+  try {
+    await insertQuery(`${api}/graphql`, { query })
+      .then(async (res) => {
+        if (res.data.errors.length > 0) {
+          await notificationFonction(
+            res.data.errors[0].message,
+            "negative",
+            "negative",
+            "top-right",
+            "error"
+          );
+        } else {
+          await notificationFonction(
+            res.data.message,
+            "positive",
+            "primary",
+            "bottom-right",
+            "check"
+          );
+
+          counter.value = "";
+          timeOut.value = false;
+          startCountdown(60);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        loading.value = false;
+      });
+  } catch (e) {
+    console.log(e);
   }
 };
 </script>

@@ -38,7 +38,7 @@ export const hasEmptyField = (formFields) => {
   return test;
 };
 
-export function notificationFonction(message, type, color, position, icon) {
+export const notificationFonction = (message, type, color, position, icon) => {
   Notify.create({
     message,
     color,
@@ -50,10 +50,10 @@ export function notificationFonction(message, type, color, position, icon) {
     timeout: 3000,
     actions: [{ icon: "close", color: "white" }],
   });
-}
-export function passwordVisibility(inputType) {
+};
+export const passwordVisibility = (inputType) => {
   inputType.value = inputType.value === "password" ? "text" : "password";
-}
+};
 
 export const insertQuery = async (url, data) => {
   const config = {

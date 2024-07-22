@@ -11,7 +11,7 @@
           <AuthInfoComponent />
         </div>
         <div class="col-xl-7 col-lg-7 col-md-7 col-sm-12 col-xs-12 bg-white">
-          <div class="text-center" v-if="ifSendCode">
+          <div class="text-center" v-if="!ifSendCode">
             <VerifyCodeComponent />
           </div>
           <div v-else class="text-center">
@@ -82,6 +82,7 @@
                       </router-link>
                     </span>
                   </p>
+
                   <br /><br />
                   <div class="flex flex-center centerDiv">
                     <q-btn
@@ -132,7 +133,6 @@ const PhoneInput = ref({
 });
 
 const loading = ref(false);
-// const checkSend = ref(false);
 
 const store = authStore();
 const router = useRouter();
@@ -153,45 +153,36 @@ const onSubmit = async () => {
     return;
   } else {
     loading.value = true;
-    const query = await ForgotPasswordQuery(PhoneInput.value.phone);
-    setTimeout(() => {
-      store.setCheckSend();
-      store.setPhoneForgotPwd(PhoneInput.value.phone);
-      // checkSend.value = true;
-      loading.value = false;
-    }, 1000);
 
-    // await insertQuery(`${api}/graphql`, { query })
-    //   .then(async (res) => {
-    //     if (res.data.errors.length > 0) {
-    //       await notificationFonction(
-    //         res.data.errors[0].message,
-    //         "negative",
-    //         "negative",
-    //         "top-right",
-    //         "error"
-    //       );
-    //     } else {
-    //       // await store.login(res, res.token);
-
-    //       await notificationFonction(
-    //         res.data.message,
-    //         "positive",
-    //         "primary",
-    //         "bottom-right",
-    //         "check"
-    //       );
-    //       checkSend.value = true;
-    //       // await resetFormFields(PhoneInput.value);
-    //       // await router.push("/Reset-Password");
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   })
-    //   .finally(() => {
-    //     loading.value = false;
-    //   });
+    store.setPhoneForgotPwd(PhoneInput.value.phone);
+    await insertQuery(`${api}/graphql`, { query })
+      .then(async (res) => {
+        if (res.data.errors.length > 0) {
+          await notificationFonction(
+            res.data.errors[0].message,
+            "negative",
+            "negative",
+            "top-right",
+            "error"
+          );
+        } else {
+          await notificationFonction(
+            res.data.message,
+            "positive",
+            "primary",
+            "bottom-right",
+            "check"
+          );
+          store.setCheckSend();
+          store.setPhoneForgotPwd(PhoneInput.value.phone);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        loading.value = false;
+      });
   }
 };
 </script>

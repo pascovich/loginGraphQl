@@ -18,7 +18,7 @@ export const ForgotPasswordQuery = (phone) => {
       forgetPasswordOperator(forgetPasswordOperatorData: {
         phone: "${phone}"
       }) {
-        id
+        phone
       }
     }
   `;

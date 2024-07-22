@@ -31,4 +31,6 @@ export default {
   haventsms: "I haven't received a code yet? ",
   resendLinkLabel: "Resend",
   subtitleDescverifyCode: "Please enter the code sent to your given number ",
+  counterTimeRest: "seconds remaining",
+  dismissBtn: "Bad Number",
 };
