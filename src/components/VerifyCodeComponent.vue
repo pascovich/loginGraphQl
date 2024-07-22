@@ -13,9 +13,14 @@
         <div class="col-xl-7 col-lg-7 col-md-7 col-sm-12 col-xs-12 bg-white">
           <div class="text-center">
             <div class="text-h6 q-mt-xl gt-sm text-bold">
-              {{ $t("authTitle") }}
+              {{ $t("titleVerifyCode") }}
             </div>
+
             <q-separator color="primary" class="gt-sm separator" inset />
+            <br />
+            <div class="text-subtitle2 gt-sm">
+              {{ $t("subtitleDescverifyCode") }}
+            </div>
             <div class="bg-primary header-div lt-md q-pt-lg">
               <div class="text-subtitle2 text-secondary">
                 <br />
@@ -27,10 +32,15 @@
               <br />
               <br />
               <div class="text-h6 text-bold text-white">
-                {{ $t("authTitle") }}
+                {{ $t("titleVerifyCode") }} vvv
               </div>
               <q-separator color="secondary " class="separatorLessThan" inset />
               <br />
+              <div class="text-subtitle2 text-white lt-md">
+                {{ $t("subtitleDescverifyCode") }}
+              </div>
+              {{ store.getPhoneForgotPwd }}
+              {{ ifSendCode }}cccc
             </div>
 
             <br />
@@ -42,49 +52,27 @@
                 :class="{ 'q-mb-xl q-pb-md': $q.screen.lt.md }"
               >
                 <q-form @submit.prevent="onSubmit">
-                  <q-input
-                    rounded
-                    outlined
-                    dense
-                    v-model="LoginInput.phone"
-                    :label="$t('phoneInput')"
-                  >
-                    <template v-slot:prepend>
-                      <q-icon name="create" />
-                    </template>
-                  </q-input>
+                  <div class="opt-field">
+                    <input type="text" v-model="nbr.num1" maxlength="1" />
+                    <input type="text" v-model="nbr.num2" maxlength="1" />
+                    <input
+                      class="space"
+                      v-model="nbr.num3"
+                      type="text"
+                      maxlength="1"
+                    />
+                    <input type="text" v-model="nbr.num4" maxlength="1" />
+                    <input type="text" v-model="nbr.num5" maxlength="1" />
+                    <input type="text" v-model="nbr.num6" maxlength="1" />
+                  </div>
                   <br />
-                  <q-input
-                    rounded
-                    outlined
-                    bottom-slots
-                    v-model="LoginInput.password"
-                    :label="$t('pwdInput')"
-                    dense
-                    :type="inputType"
-                  >
-                    <!-- :rules="[(val) => !!val || '* Required']" -->
-                    <template v-slot:prepend>
-                      <q-icon name="key" />
-                    </template>
-                    <template v-slot:append>
-                      <q-icon
-                        :name="passIcon"
-                        class="cursor-pointer"
-                        @click="togglePasswordVisibility"
-                      />
-                    </template>
-                  </q-input>
                   <p class="float-right">
-                    {{ $t("authForgotPassword") }}
-                    <span>
-                      <router-link
-                        to="/forgot-password"
-                        style="text-decoration: none"
-                        class="text-secondary text-bold"
-                      >
-                        {{ $t("ForgotPasswordLinkLabel") }}
-                      </router-link>
+                    {{ $t("haventsms") }}
+                    <span
+                      @click="resendCode"
+                      class="text-secondary text-bold btn"
+                    >
+                      {{ $t("resendLinkLabel") }}
                     </span>
                   </p>
                   <br /><br />
@@ -103,29 +91,6 @@
                     />
                   </div>
                 </q-form>
-                <br />
-                {{ $t("or") }}
-                <br /><br />
-                <div class="text-center q-gutter-md">
-                  <q-avatar
-                    size="md"
-                    v-for="(data, index) in connectedWith"
-                    :key="index"
-                  >
-                    <img :src="data.url" alt="img" srcset="" />
-                  </q-avatar>
-                </div>
-                <br />
-                {{ $t("authRegister") }}
-                <span>
-                  <router-link
-                    to="SIgnUp"
-                    style="text-decoration: none"
-                    class="text-secondary text-bold"
-                  >
-                    {{ $t("signUpLinkLabel") }}
-                  </router-link>
-                </span>
               </div>
             </div>
           </div>
@@ -136,13 +101,12 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from "vue";
+import { ref, computed } from "vue";
 import AuthInfoComponent from "./shared/LeftAuthComponent.vue";
-
+import { authStore } from "../stores/auth-store.js";
 import { logo, logoRenova, api } from "../../app/variables.js";
 import axios from "axios";
-import { LoginQuery } from "../../app/query/LoginQuery";
-import { authStore } from "../stores/auth-store.js";
+import { ForgotPasswordVerifyCodeQuery } from "../../app/query/LoginQuery";
 import { useI18n } from "vue-i18n";
 
 import {
@@ -150,35 +114,32 @@ import {
   hasEmptyField,
   notificationFonction,
   insertQuery,
-  passwordVisibility,
-  passwordIcon,
 } from "../../app/utils/index";
 
 const { t } = useI18n();
-const inputType = ref("password");
-const LoginInput = ref({
+const PhoneAndToken = ref({
   phone: "",
-  password: "",
+  verificationToken: "",
+});
+const nbr = ref({
+  num1: "",
+  num2: "",
+  num3: "",
+  num4: "",
+  num5: "",
+  num6: "",
+});
+
+const store = authStore();
+const ifSendCode = computed(() => {
+  return store.getCheckSend;
 });
 
 const loading = ref(false);
-const connectedWith = ref([
-  { name: "fb", url: "./img/fb.png" },
-  { name: "x", url: "./img/twitter.jpg" },
-  { name: "apple", url: "./img/apple.png" },
-]);
-const store = authStore();
-
-function togglePasswordVisibility() {
-  passwordVisibility(inputType);
-}
-
-const passIcon = computed(() => {
-  return inputType.value === "password" ? "visibility_off" : "visibility";
-});
 
 const onSubmit = async () => {
-  if (hasEmptyField(LoginInput.value)) {
+  PhoneAndToken.value.phone = num1.concat(num2, num3, num4, num5, num6);
+  if (hasEmptyField(PhoneAndToken.value)) {
     notificationFonction(
       "Data are empty",
       "negative",
@@ -189,9 +150,9 @@ const onSubmit = async () => {
     return;
   } else {
     loading.value = true;
-    const query = await LoginQuery(
-      LoginInput.value.phone,
-      LoginInput.value.password
+    const query = await ForgotPasswordVerifyCodeQuery(
+      PhoneAndToken.value.phone,
+      PhoneAndToken.value.verificationToken
     );
     await insertQuery(`${api}/graphql`, { query })
       .then(async (res) => {
@@ -204,7 +165,7 @@ const onSubmit = async () => {
             "error"
           );
         } else {
-          await store.login(res, res.token);
+          // await store.login(res, res.token);
 
           await notificationFonction(
             res.data.message,
@@ -213,7 +174,6 @@ const onSubmit = async () => {
             "bottom-right",
             "check"
           );
-          await resetFormFields(LoginInput.value);
         }
       })
       .catch((err) => {

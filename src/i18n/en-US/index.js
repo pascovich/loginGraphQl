@@ -21,7 +21,14 @@ export default {
   pwdInput: "The password",
 
   // Forgot Password
-  title: "Forgot Password",
-  rememberPwd: "Remember Password? click",
+  title: "FORGOT PASSWORD",
+  rememberPwd: "Remember Password? ",
   signInLinkLabel: "Sign In",
+  subtitleDesc:
+    "please complete the required fields to be able to reset your  password ",
+  // verify cde
+  titleVerifyCode: "VERIFY CODE",
+  haventsms: "I haven't received a code yet? ",
+  resendLinkLabel: "Resend",
+  subtitleDescverifyCode: "Please enter the code sent to your given number ",
 };

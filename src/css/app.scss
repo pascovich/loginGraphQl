@@ -86,3 +86,31 @@
   background-image: url("/img/pending.jpg");
   background-size: cover;
 }
+.btn {
+  cursor: pointer;
+}
+// Verify code OTP
+
+.opt-field input {
+  width: 50px;
+  font-size: 32px;
+  padding: 10px;
+  text-align: center;
+  border-radius: 5px;
+
+  margin: 4px;
+  border: 2px solid #dfdbe7;
+  background: #f8f6f6;
+  font-weight: bold;
+  /* color: #21232d; */
+  color: #bc7a44;
+  outline: none;
+  transition: all 0.1s;
+}
+.opt-field input:focus {
+  border: 2px solid #bc7a44;
+  box-shadow: 0 0 5px #bc7a44;
+}
+.disabled {
+  opacity: 0.5;
+}

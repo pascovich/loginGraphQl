@@ -23,6 +23,10 @@ const routes = [
     component: () => import("components/ForgotPasswordComponent.vue"),
   },
   {
+    path: "/verify-code",
+    component: () => import("components/VerifyCodeComponent.vue"),
+  },
+  {
     path: "/",
     component: () => import("components/LoginComponent.vue"),
   },
