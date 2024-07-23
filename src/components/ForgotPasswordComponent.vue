@@ -11,7 +11,7 @@
           <AuthInfoComponent />
         </div>
         <div class="col-xl-7 col-lg-7 col-md-7 col-sm-12 col-xs-12 bg-white">
-          <div class="text-center" v-if="!ifSendCode">
+          <div class="text-center" v-if="ifSendCode">
             <VerifyCodeComponent />
           </div>
           <div v-else class="text-center">
